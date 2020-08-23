@@ -2,7 +2,7 @@
 lint:
 	flake8 ./glacier
 	mypy ./glacier
-	python -m unittest discover -v
+	python3 -m unittest discover -v
 
 .PHONY: clean
 clean:
