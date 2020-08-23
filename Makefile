@@ -1,7 +1,7 @@
 .PHONY: lint
 lint:
-	flake8 ./water
-	mypy ./water
+	flake8 ./glacier
+	mypy ./glacier
 	python -m unittest discover -v
 
 .PHONY: clean

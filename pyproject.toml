@@ -1,9 +1,12 @@
 [tool.poetry]
-name = "python-water"
+name = "glacier"
 version = "0.1.0"
 description = ""
 authors = ["Hiroki Konishi <relastle@gmail.com>"]
 license = "MIT"
+packages = [
+  {include = "glacier"}
+]
 
 [tool.poetry.dependencies]
 python = "^3.7"

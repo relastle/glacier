@@ -37,13 +37,13 @@ def get_enum_map(f: Callable[..., None]) -> Dict[str, Dict[str, Any]]:
     return enum_map
 
 
-def water_wrap(
+def glacier_wrap(
     f: Callable[..., None],
     enum_map: Dict[str, Dict[str, Any]],
 ) -> Callable[..., None]:
     """
     Return the new function which is click-compatible
-    (has no enum signature arguments) from the arbitrary water compatible
+    (has no enum signature arguments) from the arbitrary glacier compatible
     function
     """
 
@@ -70,7 +70,7 @@ def _get_click_command(f: Callable[..., None]) -> click.BaseCommand:
         f.__doc__ = description
     sig = signature(f)
     enum_map = get_enum_map(f)
-    click_f: Any = water_wrap(f, enum_map)
+    click_f: Any = glacier_wrap(f, enum_map)
     for param in sig.parameters.values():
         if param.name.startswith('_'):
             # Positional argument
@@ -113,7 +113,7 @@ def _get_click_command(f: Callable[..., None]) -> click.BaseCommand:
     )(click_f)
 
 
-def water(f: Callable[..., None]) -> None:
+def glacier(f: Callable[..., None]) -> None:
     """
     Main function making function to command line entrypoint
     """

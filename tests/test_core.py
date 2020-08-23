@@ -3,7 +3,7 @@ from enum import Enum
 
 from click.testing import CliRunner
 
-from water.core import _get_click_command
+from glacier.core import _get_click_command
 
 
 class MyEnum(Enum):
@@ -36,7 +36,7 @@ def my_function(
 
 class Test(unittest.TestCase):
 
-    def test_water(self) -> None:
+    def test_glacier(self) -> None:
         f = _get_click_command(my_function)
         runner = CliRunner()
         result = runner.invoke(f, [
