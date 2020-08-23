@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "python-water"
+version = "0.1.0"
+description = ""
+authors = ["Hiroki Konishi <relastle@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+click = "^7.1.2"
+click-help-colors = "^0.8"
+
+[tool.poetry.dev-dependencies]
+pytest = "==6.0.1"
+flake8 = "==3.8.3"
+autopep8 = "==1.5.4"
+pyflakes = "==2.2.0"
+coverage = "==5.2.1"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
