@@ -1,11 +1,10 @@
 import unittest
 from enum import Enum
-from pprint import pformat
 
 from click.testing import CliRunner
 
+from tests.utils import get_values, get_options
 from glacier.core import _get_click_command
-from tests.utils import get_options, get_values
 
 
 class Env(Enum):
@@ -49,7 +48,7 @@ def my_function(
     return
 
 
-class Test(unittest.TestCase):
+class TestCore(unittest.TestCase):
 
     def test_glacier_ok(self) -> None:
         """
