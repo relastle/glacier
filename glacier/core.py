@@ -1,10 +1,10 @@
-from enum import Enum
-from typing import Any, Callable, Dict
-from inspect import Parameter, signature
 import functools
+from enum import Enum
+from typing import Any, Dict, List, Union, Callable, Optional
+from inspect import Parameter, signature
 
 import click
-from click_help_colors import HelpColorsCommand
+from click_help_colors import HelpColorsGroup, HelpColorsCommand
 
 """
 # TODO
@@ -63,7 +63,10 @@ def glacier_wrap(
     return wrapped
 
 
-def _get_click_command(f: Callable[..., None]) -> click.BaseCommand:
+def _get_click_command(
+    f: Callable[..., None],
+    click_group: Optional[click.Group] = None,
+) -> click.BaseCommand:
     # Get docstring
     docstring = f.__doc__
     if docstring:
@@ -89,6 +92,7 @@ def _get_click_command(f: Callable[..., None]) -> click.BaseCommand:
                 nargs=1,
             )(click_f)
         else:
+            # Optional argument
             if param.default == Parameter.empty:
                 common_kwargs = dict(required=True)
             else:
@@ -115,15 +119,66 @@ def _get_click_command(f: Callable[..., None]) -> click.BaseCommand:
                     **common_kwargs,
                 )(click_f)
 
-    return click.command(  # type: ignore
-        cls=HelpColorsCommand,
-        context_settings=CONTEXT_SETTINGS,
-        **DEFAULT_COLOR_OPTIONS,  # type: ignore
-    )(click_f)
+    if click_group:
+        return click_group.command(  # type: ignore
+            cls=HelpColorsCommand,
+            context_settings=CONTEXT_SETTINGS,
+            **DEFAULT_COLOR_OPTIONS,  # type: ignore
+        )(click_f)
+    else:
+        return click.command(  # type: ignore
+            cls=HelpColorsCommand,
+            context_settings=CONTEXT_SETTINGS,
+            **DEFAULT_COLOR_OPTIONS,  # type: ignore
+        )(click_f)
 
 
-def glacier(f: Callable[..., None]) -> None:
+def rename(
+    f: Callable[..., None],
+    name: str,
+) -> Callable[..., None]:
+    @functools.wraps(f)
+    def wrapped(*args: Any, **kwargs: Any) -> None:
+        return f(*args, **kwargs)
+    wrapped.__name__ = name
+    return wrapped
+
+
+def glacier(f: Union[
+    Callable[..., None],
+    List[Callable[..., None]],
+    Dict[str, Callable[..., None]],
+]) -> None:
     """
     Main function making function to command line entrypoint
     """
-    _get_click_command(f)()
+    if callable(f):
+        # Only one function is passed.
+        _get_click_command(f)()
+    elif isinstance(f, List):
+        # List of functions are passed.
+        # The declared name of functions are used as subcommand
+        @click.group(
+            cls=HelpColorsGroup,
+            context_settings=CONTEXT_SETTINGS,
+            **DEFAULT_COLOR_OPTIONS,  # type: ignore
+        )
+        def dummy_group() -> None:
+            pass
+
+        for _f in f:
+            _get_click_command(_f, dummy_group)
+        dummy_group()
+    elif isinstance(f, Dict):
+        # Dictionary of functions with custom subcommand name as key
+        @click.group(
+            cls=HelpColorsGroup,
+            context_settings=CONTEXT_SETTINGS,
+            **DEFAULT_COLOR_OPTIONS,  # type: ignore
+        )
+        def dummy_group() -> None:
+            pass
+
+        for name, _f in f.items():
+            _get_click_command(rename(_f, name), dummy_group)
+        dummy_group()
