@@ -1,10 +1,12 @@
 import functools
 from enum import Enum
-from typing import Any, Dict, List, Union, Callable, Optional
+from typing import Any, Callable, Dict, List, Optional, Union
 from inspect import Parameter, signature
 
 import click
-from click_help_colors import HelpColorsGroup, HelpColorsCommand
+from click_help_colors import HelpColorsCommand, HelpColorsGroup
+
+from glacier.docstring import GoogleParser
 
 """
 # TODO
@@ -69,9 +71,15 @@ def _get_click_command(
 ) -> click.BaseCommand:
     # Get docstring
     docstring = f.__doc__
+    arg_help_d: Dict[str, str] = {}
     if docstring:
-        description = '\n'.join(docstring.splitlines()[:2])
-        f.__doc__ = description
+        parser = GoogleParser()
+        doc = parser.parse(docstring=docstring)
+        f.__doc__ = doc.description
+        arg_help_d = {
+            arg.name: arg.description
+            for arg in doc.args
+        }
 
     # Get signature
     sig = signature(f)
@@ -94,9 +102,15 @@ def _get_click_command(
         else:
             # Optional argument
             if param.default == Parameter.empty:
-                common_kwargs = dict(required=True)
+                common_kwargs = dict(
+                    required=True,
+                    help=arg_help_d.get(param.name, ''),
+                )
             else:
-                common_kwargs = dict(default=param.default)
+                common_kwargs = dict(
+                    default=param.default,
+                    help=arg_help_d.get(param.name, ''),
+                )
             if param.annotation == bool:
                 # Boolean flag
                 click_f = click.option(  # type: ignore
