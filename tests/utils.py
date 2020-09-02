@@ -1,5 +1,17 @@
 import re
-from typing import List
+from typing import Dict, List
+
+
+def get_values(output_str: str) -> Dict[str, str]:
+    """
+    Get the dictionary representing actual value passed to the function
+    """
+    res_d = {}
+    for line in output_str.splitlines():
+        m = re.match(r'(\w+)=(.+)', line.strip())
+        assert m is not None
+        res_d[m.group(1)] = m.group(2)
+    return res_d
 
 
 def get_options(help_str: str) -> List[str]:

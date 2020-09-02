@@ -92,7 +92,7 @@ def _get_click_command(f: Callable[..., None]) -> click.BaseCommand:
             if param.default == Parameter.empty:
                 common_kwargs = dict(required=True)
             else:
-                common_kwargs = dict()
+                common_kwargs = dict(default=param.default)
             if param.annotation == bool:
                 # Boolean flag
                 click_f = click.option(  # type: ignore
