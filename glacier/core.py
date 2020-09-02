@@ -9,7 +9,7 @@ from click_help_colors import HelpColorsCommand
 """
 # TODO
 
-- [ ] Enum support.
+- [x] Enum support.
 - [ ] Parse python docstring to display help.
 """
 
@@ -64,14 +64,23 @@ def glacier_wrap(
 
 
 def _get_click_command(f: Callable[..., None]) -> click.BaseCommand:
+    # Get docstring
     docstring = f.__doc__
     if docstring:
         description = '\n'.join(docstring.splitlines()[:2])
         f.__doc__ = description
+
+    # Get signature
     sig = signature(f)
+
+    # Precauclate Enum mappings
     enum_map = get_enum_map(f)
+
+    # Return new function which interprets custom type such as Enum.
     click_f: Any = glacier_wrap(f, enum_map)
-    for param in sig.parameters.values():
+
+    # Decorate the function reversely.
+    for param in reversed(sig.parameters.values()):
         if param.name.startswith('_'):
             # Positional argument
             click_f = click.argument(
