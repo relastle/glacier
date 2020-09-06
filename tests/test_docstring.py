@@ -95,10 +95,10 @@ class TestDocstringNumpy(unittest.TestCase):
 
         Parameters
         ----------
-            foo: str
-                 Description of foo.
-            bar: int
-                 Description of bar.
+        foo: str
+             Description of foo.
+        bar: int
+             Description of bar.
         """
         parser = NumpyParser()
         doc = parser.parse(docstring)

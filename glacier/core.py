@@ -1,12 +1,18 @@
 import functools
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Dict, List, Type, Union, Callable, Optional
 from inspect import Parameter, signature
 
 import click
-from click_help_colors import HelpColorsCommand, HelpColorsGroup
+from click_help_colors import HelpColorsGroup, HelpColorsCommand
 
-from glacier.docstring import GoogleParser
+from glacier.docstring import (
+    Doc,
+    Parser,
+    NumpyParser,
+    GoogleParser,
+    RestructuredTextParser
+)
 
 """
 # TODO
@@ -65,24 +71,43 @@ def glacier_wrap(
     return wrapped
 
 
+def _get_best_doc(docstring: str, arg_names: List[str]) -> Doc:
+    """
+    Detect the format of docstring and return best help generated from docstring.
+    """
+    parser_types: List[Type[Parser]] = [
+        GoogleParser,
+        NumpyParser,
+        RestructuredTextParser,
+    ]
+    docs = [
+        parser_type().parse(docstring=docstring)
+        for parser_type in parser_types
+    ]
+    return max(docs, key=lambda doc: doc.get_matched_arg_count(arg_names))
+
+
 def _get_click_command(
     f: Callable[..., None],
     click_group: Optional[click.Group] = None,
 ) -> click.BaseCommand:
+    # Get signature
+    sig = signature(f)
+
     # Get docstring
     docstring = f.__doc__
-    arg_help_d: Dict[str, str] = {}
     if docstring:
-        parser = GoogleParser()
-        doc = parser.parse(docstring=docstring)
+        doc = _get_best_doc(
+            docstring=docstring,
+            arg_names=[param.name for param in sig.parameters.values()],
+        )
         f.__doc__ = doc.description
         arg_help_d = {
             arg.name: arg.description
             for arg in doc.args
         }
-
-    # Get signature
-    sig = signature(f)
+    else:
+        arg_help_d = {}
 
     # Precauclate Enum mappings
     enum_map = get_enum_map(f)

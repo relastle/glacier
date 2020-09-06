@@ -2,7 +2,6 @@
 Parser of docstring
 """
 from __future__ import annotations
-from pprint import pformat
 
 import re
 from enum import Enum, auto
@@ -165,6 +164,15 @@ class Arg:
 class Doc:
     description: str
     args: List[Arg]
+
+    def get_matched_arg_count(self, real_args: List[str]) -> int:
+        """ Get the number of given argument names which is also
+        in docstring.
+        """
+
+        return sum([
+            (arg.name in real_args) for arg in self.args
+        ])
 
 
 class Parser(Protocol):
