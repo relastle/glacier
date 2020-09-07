@@ -35,7 +35,8 @@ Then, you can see help 🍰.
 
 ### CLI without subcommand
 
-If you just call `glacier` to a function, it will invoke it as stand-alone CLI (like the example in Quick start).
+If you just call `glacier` to a function, it will invoke it as stand-alone CLI
+(like the example in [Quick start](https://github.com/relastle/glacier#quick-start)).
 
 ### CLI with subcommands
 
@@ -141,7 +142,7 @@ This works exactly the same as the previous example.
 
 This interface makes it very easy to build a simple CLI tool from an existing project.
 
-#### Positional argument
+### Positional argument
 
 If the name of function argument is underscore-prefiexed, it is understood as positional argument.
 
@@ -162,10 +163,10 @@ if __name__ == '__main__':
 The above example is invoked as follows
 
 ```bash
-<command_name> <vallue of a> <vallue of b> <vallue of c>
+<command_name> <value of a> <value of b> <value of c>
 ```
 
-#### Options
+### Options
 
 All other (non-underscore-prefixed) arguments are understood as options.
 
@@ -186,10 +187,10 @@ if __name__ == '__main__':
 The above example is invoked as follows
 
 ```bash
-<command_name> --a <vallue of a> --b <vallue of b> --c <vallue of c>
+<command_name> --a <value of a> --b <value of b> --c <value of c>
 ```
 
-#### Default value for optional argument
+### Default value for optional argument
 
 If you set the default value for function argument, it also defines the default value for CLI option.
 
@@ -218,10 +219,96 @@ or
 <command_name> --verbose # Call with flag (`True` will be printed)
 ```
 
-#### Supported types
+### Help with docstring
 
-- int
-- str
-- bool
-- Enum
+Help message for options or command itself can be provided with python docstring.
+
+Following style of doctrings are supported
+
+- [Google Style](google-style)
+- [Numpy Style](numpy-style)
+- [reStructuredText Style](restructuredtext-style)
+
+The functions with docstring below will produce the exact the same help message with fed into `glacier`.
+(You don't neet to specify which docstring style is used 😄)
+
+#### Google Style
+
+```python
+def main_google(
+    _path: str,
+    name: str,
+    verbose: bool = False,
+) -> None:
+    """
+    This is my simple entry point of CLI.
+
+    Args:
+        _path: Positional argument representing the target file path.
+        name: Name of this operation.
+        verbose: Verbose output will be shown if set.
+    """
+    print(_path)
+    print(name)
+    print(verbose)
+    return
+```
+
+#### Numpy Style
+
+```python
+def main_numpy(
+    _path: str,
+    name: str,
+    verbose: bool = False,
+) -> None:
+    """
+    This is my simple entry point of CLI.
+
+    Parameters
+    ----------
+    _path: str
+        Positional argument representing the target file path.
+    name: str
+        Name of this operation.
+    verbose: bool
+        Verbose output will be shown if set.
+    """
+    print(_path)
+    print(name)
+    print(verbose)
+    return
+```
+
+#### reStructuredText Style
+
+
+```python
+def main_restructured_text(
+    _path: str,
+    name: str,
+    verbose: bool = False,
+) -> None:
+    """
+    This is my simple entry point of CLI.
+
+    :param _path: Positional argument representing the target file path.
+    :param name: Name of this operation.
+    :param verbose: Verbose output will be shown if set.
+    """
+    print(_path)
+    print(name)
+    print(verbose)
+    return
+```
+
+
+### Supported types
+
+- [x] int
+- [x] str
+- [x] bool
+- [x] Enum
+- [ ] List[int]
+- [ ] List[str]
 
