@@ -4,6 +4,28 @@
 
 glacier is a python CLI building library for minimalists.
 
+- [glacier](#glacier)
+  * [Installation](#installation)
+  * [Quick start](#quick-start)
+  * [Basic Usage](#basic-usage)
+    + [CLI without subcommand](#cli-without-subcommand)
+    + [CLI with subcommands](#cli-with-subcommands)
+      - [Pass a list of functions](#pass-a-list-of-functions)
+      - [Pass a dictionary of functions](#pass-a-dictionary-of-functions)
+    + [Positional argument](#positional-argument)
+    + [Options](#options)
+    + [Default value for optional argument](#default-value-for-optional-argument)
+    + [Help with docstring](#help-with-docstring)
+      - [Google Style](#google-style)
+      - [Numpy Style](#numpy-style)
+      - [reStructuredText Style](#restructuredtext-style)
+    + [Supported types](#supported-types)
+  * [Note](#note)
+    + [:apple: Philosophy](#apple-philosophy)
+    + [:construction: Warnings](#construction-warnings)
+  * [Related works](#related-works)
+  * [LICENSE](#license)%
+
 ## Installation
 
 ```python
