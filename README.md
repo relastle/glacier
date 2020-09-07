@@ -313,11 +313,24 @@ def main_restructured_text(
 
 ## Note
 
+#### philosophy
+
+This library is made for building CLI quickly especially for personal use,
+so the features provided by it is not rich.
+
+If you want to build really user-friend CLI or that in production,
+I suggest that you use [click](https://click.palletsprojects.com/en/7.x/) (Actually glacier uses it internally),
+or other full-stack CLI builing libraries.
+
 #### :construction:
 
 - Please note that any destructive change (backward incompatible) can be done without any announcement.
 - This plugin is in a very early stage of development.  Feel free to report problems or submit feature requests in [Issues](https://github.com/relastle/glacier/issues).
 
+## Related works
+
+- [google/python-fire: Python Fire is a library for automatically generating command line interfaces (CLIs) from absolutely any Python object.](https://github.com/google/python-fire)
+- [tiangolo/typer: Typer, build great CLIs. Easy to code. Based on Python type hints.](https://github.com/tiangolo/typer)
 
 ## [LICENSE](./LICENSE)
 
