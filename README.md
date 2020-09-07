@@ -81,7 +81,6 @@ def test(
 
 if __name__ == '__main__':
     glacier([run, build, test])
-   glacier([run, build, test])
 ```
 
 If you passes a lift of function, glacier constructs the CLI with subcommands whose names are the same as the declared function names.
@@ -225,9 +224,9 @@ Help message for options or command itself can be provided with python docstring
 
 Following style of doctrings are supported
 
-- [Google Style](google-style)
-- [Numpy Style](numpy-style)
-- [reStructuredText Style](restructuredtext-style)
+- [Google Style](https://github.com/relastle/glacier#google-style)
+- [Numpy Style](https://github.com/relastle/glacier#numpy-style)
+- [reStructuredText Style](https://github.com/relastle/glacier#restructuredtext-style)
 
 The functions with docstring below will produce the exact the same help message with fed into `glacier`.
 (You don't neet to specify which docstring style is used 😄)
@@ -312,3 +311,14 @@ def main_restructured_text(
 - [ ] List[int]
 - [ ] List[str]
 
+## Note
+
+#### :construction:
+
+- Please note that any destructive change (backward incompatible) can be done without any announcement.
+- This plugin is in a very early stage of development.  Feel free to report problems or submit feature requests in [Issues](https://github.com/relastle/glacier/issues).
+
+
+## [LICENSE](./LICENSE)
+
+MIT
