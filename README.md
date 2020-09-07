@@ -24,7 +24,7 @@ glacier is a python CLI building library for minimalists.
     + [:apple: Philosophy](#apple-philosophy)
     + [:construction: Warnings](#construction-warnings)
   * [Related works](#related-works)
-  * [LICENSE](#license)%
+  * [LICENSE](#license)
 
 ## Installation
 
