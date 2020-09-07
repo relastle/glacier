@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
 Then, you can see help 🍰.
 
-<img width="430" alt="Screen Shot 2020-09-07 at 8 27 28" src="https://user-images.githubusercontent.com/6816040/92337363-fd87cf80-f0e3-11ea-8902-d0488fbd8547.png">
+![quick start help](https://user-images.githubusercontent.com/6816040/92337363-fd87cf80-f0e3-11ea-8902-d0488fbd8547.png")
 
 
 ## Basic Usage
@@ -87,7 +87,7 @@ If you passes a lift of function, glacier constructs the CLI with subcommands wh
 In this example, the subcommans will be `run`,  `build`, and `test`.
 
 
-<img width="462" alt="Screen Shot 2020-09-07 at 21 56 27" src="https://user-images.githubusercontent.com/6816040/92397064-108cb500-f161-11ea-9cb2-0f0a1c4da2f5.png">
+![sub commands help](https://user-images.githubusercontent.com/6816040/92397064-108cb500-f161-11ea-9cb2-0f0a1c4da2f5.png)
 
 
 #### Pass a dictionary of functions
