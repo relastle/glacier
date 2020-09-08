@@ -4,6 +4,11 @@ lint:
 	mypy ./glacier ./tests
 	python3 -m unittest discover -v
 
+.PHONY: test
+test:
+	coverage run --omit='./tests/**/*' --source=. -m pytest -vvs --durations=10 --diff-type=split
+	coverage report -m
+
 .PHONY: publish
 publish: lint
 	@poetry build

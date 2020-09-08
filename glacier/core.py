@@ -116,7 +116,7 @@ def _get_click_command(
     click_f: Any = glacier_wrap(f, enum_map)
 
     # Decorate the function reversely.
-    for param in reversed(sig.parameters.values()):
+    for param in reversed(list(sig.parameters.values())):
         if param.name.startswith('_'):
             # Positional argument
             click_f = click.argument(
