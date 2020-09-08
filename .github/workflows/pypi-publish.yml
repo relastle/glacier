@@ -1,0 +1,28 @@
+name: pypi-publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  pytest:
+    name: pytest
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Install
+      uses: abatilo/actions-poetry@v1.5.0
+      with:
+        python_version: 3.8
+        poetry_version: 1.0.3
+        working_directory: ./
+        args: install
+    - name: Publish
+      uses: abatilo/actions-poetry@v1.5.0
+      with:
+        poetry_version: 1.0.3
+        args: publish --build -u ${PYPI_USER} -p ${PYPI_PASSWORD}
+      env:
+        PYPI_USER: ${{ secrets.PYPI_USER }}
+        PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
