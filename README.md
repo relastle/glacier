@@ -4,9 +4,9 @@
 
 glacier is a python CLI building library for minimalists.
 
-<a href="https://pypi.org/project/glacier/"><img src="https://img.shields.io/pypi/v/glacier?color=7DA7CE"/></a>
-<a href="https://pypi.org/project/glacier/"><img src="https://img.shields.io/pypi/pyversions/glacier?color=7DA7CE"/></a>
-<a href="https://pypi.org/project/glacier/"><img src="https://img.shields.io/pypi/l/glacier?color=7DA7CE"/></a>
+<a href="https://pypi.org/project/glacier/"><img src="https://img.shields.io/pypi/v/glacier?color=395c81"/></a>
+<a href="https://pypi.org/project/glacier/"><img src="https://img.shields.io/pypi/pyversions/glacier?color=395c81"/></a>
+<a href="https://pypi.org/project/glacier/"><img src="https://img.shields.io/pypi/l/glacier?color=395c81"/></a>
 
 <a href="https://github.com/relastle/glacier/actions?query=workflow%3Apythontests"><img src="https://github.com/relastle/glacier/workflows/pythontests/badge.svg"/></a>
 <a href="https://github.com/relastle/glacier/actions?query=workflow%3Apypi-publish"><img src="https://github.com/relastle/glacier/workflows/pypi-publish/badge.svg"/></a>
