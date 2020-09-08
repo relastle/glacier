@@ -16,18 +16,29 @@ jobs:
       matrix:
         python-version: [3.6, 3.7, 3.8]
     steps:
-    - uses: actions/checkout@master
-    - name: Install
-      uses: abatilo/actions-poetry@v1.5.0
-      with:
-        python_version: ${{ matrix.python-version }}
-        poetry_version: 1.0.3
-        working_directory: ./
-        args: install
-    - name: Run pytest
-      uses: abatilo/actions-poetry@v1.5.0
-      with:
-        python_version: ${{ matrix.python-version }}
-        poetry_version: 1.0.3
-        working_directory: ./
-        args: run pytest -vvs
+      - uses: actions/checkout@master
+
+      - name: Install
+        uses: abatilo/actions-poetry@v1.5.0
+        with:
+          python_version: ${{ matrix.python-version }}
+          poetry_version: 1.0.3
+          working_directory: ./
+          args: install
+
+      - name: Run pytest
+        uses: abatilo/actions-poetry@v1.5.0
+        with:
+          python_version: ${{ matrix.python-version }}
+          poetry_version: 1.0.3
+          working_directory: ./
+          args: run pytest -vvs
+
+      - name: Upload coverage to Codecov
+        if: github.event.pull_request.merged == true
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          name: codecov-umbrella
+          fail_ci_if_error: true

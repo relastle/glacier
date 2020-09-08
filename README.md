@@ -10,6 +10,7 @@ glacier is a python CLI building library for minimalists.
 
 <a href="https://github.com/relastle/glacier/actions?query=workflow%3Apythontests"><img src="https://github.com/relastle/glacier/workflows/pythontests/badge.svg"/></a>
 <a href="https://github.com/relastle/glacier/actions?query=workflow%3Apypi-publish"><img src="https://github.com/relastle/glacier/workflows/pypi-publish/badge.svg"/></a>
+<a href="https://codecov.io/gh/relastle/glacier"><img src="https://codecov.io/gh/relastle/glacier/branch/master/graph/badge.svg?token=IBCYZODDY3"/></a>
 
 - [glacier](#glacier)
   * [Installation](#installation)
