@@ -32,7 +32,16 @@ jobs:
           python_version: ${{ matrix.python-version }}
           poetry_version: 1.0.3
           working_directory: ./
-          args: run pytest -vvs
+          args: run coverage run --omit='./tests/**/*' --source=. -m pytest -vv --durations=10
+
+      - name: create coverage xml
+        if: ${{ github.ref == 'refs/heads/master' && matrix.python-version == 3.8 }}
+        uses: abatilo/actions-poetry@v1.5.0
+        with:
+          python_version:  ${{ matrix.python-version }}
+          poetry_version: 1.0.3
+          working_directory: ./
+          args: run coverage xml
 
       - name: Upload coverage to Codecov
         if: ${{ github.ref == 'refs/heads/master' && matrix.python-version == 3.8 }}
