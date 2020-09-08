@@ -29,5 +29,5 @@ jobs:
       with:
         python_version: ${{ matrix.python-version }}
         poetry_version: 1.0.3
-        working_directory: ./python3
+        working_directory: ./
         args: run pytest -vvs
