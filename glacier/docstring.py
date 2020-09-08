@@ -1,8 +1,6 @@
 """
 Parser of docstring
 """
-from __future__ import annotations
-
 import re
 from enum import Enum, auto
 from typing import List
@@ -53,7 +51,7 @@ class Arg:
     description: str
 
     @classmethod
-    def of_lines_google(cls, lines: List[str]) -> List[Arg]:
+    def of_lines_google(cls, lines: List[str]) -> List['Arg']:
         """
         Parse the lines of args as following and return the list.
 
@@ -90,7 +88,7 @@ class Arg:
         return args
 
     @classmethod
-    def of_lines_numpy(cls, lines: List[str]) -> List[Arg]:
+    def of_lines_numpy(cls, lines: List[str]) -> List['Arg']:
         """
         Parse the lines of numpy args format as following and return the list.
 
@@ -123,7 +121,7 @@ class Arg:
         return args
 
     @classmethod
-    def of_lines_resttxt(cls, lines: List[str]) -> List[Arg]:
+    def of_lines_resttxt(cls, lines: List[str]) -> List['Arg']:
         """
         Parse the lines of reStructuredText args format as following
         and return the list.
