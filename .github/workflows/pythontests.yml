@@ -1,0 +1,29 @@
+name: pythontests
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  pytest:
+    name: pytest
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Install
+      uses: abatilo/actions-poetry@v1.5.0
+      with:
+        python_version: 3.7.6
+        poetry_version: 1.0.3
+        working_directory: ./
+        args: install
+    - name: Run pytest
+      uses: abatilo/actions-poetry@v1.5.0
+      with:
+        python_version: 3.7.6
+        poetry_version: 1.0.3
+        working_directory: ./python3
+        args: run pytest -vvs
