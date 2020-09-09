@@ -76,37 +76,21 @@ You can easily construct CLI with subcommands in the following two ways.
 #### Pass a list of functions
 
 ```python
-
 from glacier import glacier
 
 
-def run(
-    name: str,
-    verbose: bool = False,
-) -> None:
+def run(name: str, verbose: bool = False) -> None:
     """ Run """
-    print(name)
-    print(verbose)
-    return
+    pass
 
 
-def build(
-    name: str,
-    verbose: bool = False,
-) -> None:
+def build(name: str, verbose: bool = False) -> None:
     """ Build """
-    print(name)
-    print(verbose)
-    return
+    pass
 
 
-def test(
-    name: str,
-    verbose: bool = False,
-) -> None:
+def test(name: str, verbose: bool = False) -> None:
     """ Test """
-    print(name)
-    print(verbose)
     return
 
 
@@ -131,41 +115,24 @@ Just give a dictionary (key will be a subcommand name).
 from glacier import glacier
 
 
-def f1(
-    name: str,
-    verbose: bool = False,
-) -> None:
-    print(name)
-    print(verbose)
-    return
+def f1(name: str, verbose: bool = False) -> None:
+    pass
 
 
-def f2(
-    name: str,
-    verbose: bool = False,
-) -> None:
-    print(name)
-    print(verbose)
-    return
+def f2(name: str, verbose: bool = False) -> None:
+    pass
 
 
-def f3(
-    name: str,
-    verbose: bool = False,
-) -> None:
-    print(name)
-    print(verbose)
-    return
+def f3(name: str, verbose: bool = False) -> None:
+    pass
 
 
 if __name__ == '__main__':
-    glacier(
-        {
-            'run': f1,
-            'build': f2,
-            'test': f3,
-        },
-    )
+    glacier({
+        'run': f1,
+        'build': f2,
+        'test': f3,
+    })
 ```
 
 This works exactly the same as the previous example.
