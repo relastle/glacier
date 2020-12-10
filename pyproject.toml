@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "glacier"
-version = "0.1.4"
+version = "0.1.5"
 description = ""
 authors = ["Hiroki Konishi <relastle@gmail.com>"]
 license = "MIT"
@@ -14,6 +14,7 @@ click = "^7.1.2"
 click-help-colors = "^0.8"
 typing_extensions = { version =  "^3.7.4" }
 dataclasses = { version = "^0.7", python = ">=3.6, <3.7" }
+click-completion = "^0.5.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "==6.0.1"
