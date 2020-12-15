@@ -12,7 +12,7 @@ jobs:
     name: pytest
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 3
+      max-parallel: 5
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
     steps:
@@ -35,7 +35,7 @@ jobs:
           args: run coverage run --omit='./tests/**/*' --source=. -m pytest -vv --durations=10
 
       - name: create coverage xml
-        if: ${{ github.ref == 'refs/heads/master' && matrix.python-version == 3.8 }}
+        if: ${{ github.ref == 'refs/heads/master' && matrix.python-version == 3.9 }}
         uses: abatilo/actions-poetry@v1.5.0
         with:
           python_version:  ${{ matrix.python-version }}
@@ -44,10 +44,10 @@ jobs:
           args: run coverage xml
 
       - name: Upload coverage to Codecov
-        if: ${{ github.ref == 'refs/heads/master' && matrix.python-version == 3.8 }}
+        if: ${{ github.ref == 'refs/heads/master' && matrix.python-version == 3.9 }}
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
           name: codecov-umbrella
-          fail_ci_if_error: true
+          fail_ci_if_error: false
