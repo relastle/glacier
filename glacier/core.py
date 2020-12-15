@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import functools
 from enum import Enum
 from inspect import Parameter, signature
