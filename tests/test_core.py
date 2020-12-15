@@ -2,9 +2,9 @@ import unittest
 from enum import Enum
 
 from click.testing import CliRunner
+from glacier.core import _get_click_command, glacier_group
 
-from tests.utils import get_values, get_options
-from glacier.core import _get_click_command
+from tests.utils import get_options, get_values
 
 
 class Env(Enum):
@@ -203,4 +203,37 @@ class TestCore(unittest.TestCase):
             assert 'whether it is test or not.' in help_options[2].line
             assert 'Environment where to run the CLI.' in help_options[3].line
             assert 'If set, verbose output will be shown.' in help_options[4].line
+        return
+
+    def test_glacier_nestes_groups(self) -> None:
+        """
+        Check if CLI with nested click.group works correctly.
+        """
+
+        def a_1() -> None:
+            print('a_1')
+
+        def a_2() -> None:
+            print('a_2')
+
+        def b() -> None:
+            print('b')
+
+        f = glacier_group({
+            'a': [
+                a_1,
+                a_2,
+            ],
+            'b': b,
+        })
+        runner = CliRunner()
+        assert runner.invoke(f, [
+            'a', 'a-1',
+        ]).output == 'a_1\n'
+        assert runner.invoke(f, [
+            'a', 'a-2',
+        ]).output == 'a_2\n'
+        assert runner.invoke(f, [
+            'b',
+        ]).output == 'b\n'
         return

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import functools
 from enum import Enum
 from inspect import Parameter, signature
@@ -189,7 +191,7 @@ def rename(
     required=False,
     type=click_completion.DocumentedChoice(click_completion.core.shells),
 )
-def show(shell: str, case_insensitive: bool) -> None:
+def show_completion(shell: str, case_insensitive: bool) -> None:
     """Show the click-completion-command completion code"""
     extra_env = {
         '_CLICK_COMPLETION_COMMAND_CASE_INSENSITIVE_COMPLETE': 'ON'
@@ -197,10 +199,75 @@ def show(shell: str, case_insensitive: bool) -> None:
     click.echo(click_completion.core.get_code(shell, extra_env=extra_env))
 
 
+GlacierUnit = Union[
+    List[Callable[..., None]],
+    Dict[str, Callable[..., None]],
+]
+
+
+def glacier_group(
+    f: Union[
+        List[Callable[..., None]],
+        Dict[str, Union[Callable[..., None], GlacierUnit]],
+    ],
+    parent_group: Optional[click.Group] = None,
+    group_name: Optional[str] = None,
+) -> click.Group:
+    """
+    Make click group
+    """
+    if parent_group is None:
+        group_cls: Any = click  # type: ignore
+    else:
+        group_cls = parent_group
+
+    def dummy_group() -> None:
+        pass
+
+    if group_name:
+        dummy_group = rename(dummy_group, group_name)
+
+    group = group_cls.group(  # type: ignore
+        cls=HelpColorsGroup,
+        context_settings=CONTEXT_SETTINGS,
+        **DEFAULT_COLOR_OPTIONS,
+    )(dummy_group)
+
+    if isinstance(f, list):
+        # List of functions are passed.
+        # The declared name of functions are used as subcommand
+
+        for _f in f:
+            _get_click_command(_f, group)
+
+    elif isinstance(f, dict):
+        # Dictionary of functions with custom subcommand name as key
+        for name, _f in f.items():  # type: ignore
+            if callable(_f):
+                _get_click_command(rename(_f, name), group)
+            else:
+                glacier_group(
+                    _f,
+                    group,
+                    name,
+                )
+    else:
+        raise Exception("The arguments of glacier is wrong.")
+
+    if parent_group is None:
+        group.command(  # type: ignore
+            cls=HelpColorsCommand,
+            context_settings=CONTEXT_SETTINGS,
+            **DEFAULT_COLOR_OPTIONS,  # type: ignore
+        )(show_completion)
+
+    return group  # type: ignore
+
+
 def glacier(f: Union[
     Callable[..., None],
     List[Callable[..., None]],
-    Dict[str, Callable[..., None]],
+    Dict[str, Union[Callable[..., None], GlacierUnit]],
 ]) -> None:
     """
     Main function making function to command line entrypoint
@@ -209,49 +276,7 @@ def glacier(f: Union[
     if callable(f):
         # Only one function is passed.
         entry_point_f = _get_click_command(f)
-    elif isinstance(f, List):
-        # List of functions are passed.
-        # The declared name of functions are used as subcommand
-        @click.group(
-            cls=HelpColorsGroup,
-            context_settings=CONTEXT_SETTINGS,
-            **DEFAULT_COLOR_OPTIONS,  # type: ignore
-        )
-        def dummy_group() -> None:
-            pass
-
-        for _f in f:
-            _get_click_command(_f, dummy_group)
-
-        dummy_group.command(  # type: ignore
-            cls=HelpColorsCommand,
-            context_settings=CONTEXT_SETTINGS,
-            **DEFAULT_COLOR_OPTIONS,  # type: ignore
-        )(show)
-
-        entry_point_f = dummy_group
-    elif isinstance(f, Dict):
-        # Dictionary of functions with custom subcommand name as key
-        @click.group(
-            cls=HelpColorsGroup,
-            context_settings=CONTEXT_SETTINGS,
-            **DEFAULT_COLOR_OPTIONS,  # type: ignore
-        )
-        def dummy_group() -> None:
-            pass
-
-        for name, _f in f.items():
-            _get_click_command(rename(_f, name), dummy_group)
-
-        dummy_group.command(  # type: ignore
-            cls=HelpColorsCommand,
-            context_settings=CONTEXT_SETTINGS,
-            **DEFAULT_COLOR_OPTIONS,  # type: ignore
-        )(show)
-
-        entry_point_f = dummy_group
     else:
-        raise Exception("The arguments of glacier is wrong.")
-
+        entry_point_f = glacier_group(f)
     click_completion.init()
     entry_point_f()
