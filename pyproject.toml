@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "glacier"
-version = "0.2.0"
+version = "0.3.0"
 description = ""
 authors = ["Hiroki Konishi <relastle@gmail.com>"]
 license = "MIT"
@@ -9,7 +9,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.7"
 click = "^7.1.2"
 click-help-colors = "^0.8"
 typing_extensions = { version =  "^3.7.4" }
