@@ -1,7 +1,8 @@
 import functools
 from enum import Enum
 from inspect import Parameter, signature
-from typing import Any, Callable, Dict, List, Optional, Type, Union
+from typing import (Any, Callable, Coroutine, Dict, List, Optional, Type,
+                    TypeVar, Union)
 
 import click
 import click_completion
@@ -9,6 +10,7 @@ from click_help_colors import HelpColorsCommand, HelpColorsGroup
 
 from glacier.docstring import (Doc, GoogleParser, NumpyParser, Parser,
                                RestructuredTextParser)
+from glacier.misc import coro
 
 """
 # TODO
@@ -16,6 +18,9 @@ from glacier.docstring import (Doc, GoogleParser, NumpyParser, Parser,
 - [x] Enum support.
 - [ ] Parse python docstring to display help.
 """
+
+T = TypeVar('T')
+
 
 CONTEXT_SETTINGS = dict(
     help_option_names=['-h', '--help'],
@@ -25,6 +30,18 @@ DEFAULT_COLOR_OPTIONS = dict(
     help_headers_color='white',
     help_options_color='cyan',
 )
+
+
+GlacierFunction = Union[
+    Callable[..., None],
+    Callable[..., Coroutine[Any, Any, Any]],
+]
+
+
+GlacierUnit = Union[
+    List[GlacierFunction],
+    Dict[str, GlacierFunction],
+]
 
 
 def get_enum_map(f: Callable[..., None]) -> Dict[str, Dict[str, Any]]:
@@ -84,9 +101,11 @@ def _get_best_doc(docstring: str, arg_names: List[str]) -> Doc:
 
 
 def _get_click_command(
-    f: Callable[..., None],
+    f: Callable[..., Any],
     click_group: Optional[click.Group] = None,
 ) -> click.BaseCommand:
+    f = coro(f)
+
     # Get signature
     sig = signature(f)
 
@@ -169,11 +188,11 @@ def _get_click_command(
 
 
 def rename(
-    f: Callable[..., None],
+    f: Callable[..., T],
     name: str,
-) -> Callable[..., None]:
+) -> Callable[..., T]:
     @functools.wraps(f)
-    def wrapped(*args: Any, **kwargs: Any) -> None:
+    def wrapped(*args: Any, **kwargs: Any) -> T:
         return f(*args, **kwargs)
     wrapped.__name__ = name
     return wrapped
@@ -197,16 +216,10 @@ def show_completion(shell: str, case_insensitive: bool) -> None:
     click.echo(click_completion.core.get_code(shell, extra_env=extra_env))
 
 
-GlacierUnit = Union[
-    List[Callable[..., None]],
-    Dict[str, Callable[..., None]],
-]
-
-
 def glacier_group(
     f: Union[
-        List[Callable[..., None]],
-        Dict[str, Union[Callable[..., None], GlacierUnit]],
+        List[GlacierFunction],
+        Dict[str, Union[GlacierFunction, GlacierUnit]],
     ],
     parent_group: Optional[click.Group] = None,
     group_name: Optional[str] = None,
@@ -236,16 +249,16 @@ def glacier_group(
         # The declared name of functions are used as subcommand
 
         for _f in f:
-            _get_click_command(_f, group)
+            _get_click_command(coro(_f), group)
 
     elif isinstance(f, dict):
         # Dictionary of functions with custom subcommand name as key
         for name, _f in f.items():  # type: ignore
             if callable(_f):
-                _get_click_command(rename(_f, name), group)
+                _get_click_command(rename(coro(_f), name), group)
             else:
                 glacier_group(
-                    _f,
+                    _f,  # type: ignore
                     group,
                     name,
                 )
@@ -263,9 +276,9 @@ def glacier_group(
 
 
 def glacier(f: Union[
-    Callable[..., None],
-    List[Callable[..., None]],
-    Dict[str, Union[Callable[..., None], GlacierUnit]],
+    GlacierFunction,
+    List[GlacierFunction],
+    Dict[str, Union[GlacierFunction, GlacierUnit]],
 ]) -> None:
     """
     Main function making function to command line entrypoint
@@ -275,6 +288,6 @@ def glacier(f: Union[
         # Only one function is passed.
         entry_point_f = _get_click_command(f)
     else:
-        entry_point_f = glacier_group(f)
+        entry_point_f = glacier_group(f)  # type: ignore
     click_completion.init()
     entry_point_f()

@@ -237,3 +237,19 @@ class TestCore(unittest.TestCase):
             'b',
         ]).output == 'b\n'
         return
+
+
+async def my_async_function(_a: str, b: int) -> None:
+    print('foo')
+
+
+class TestCoreAsync(unittest.TestCase):
+
+    def test_async_function(_) -> None:
+        f = _get_click_command(my_async_function)
+        runner = CliRunner()
+        result = runner.invoke(f, [
+            'a',
+            '--b=10',
+        ])
+        assert result.stdout.strip() == 'foo'

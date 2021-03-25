@@ -13,27 +13,28 @@ glacier is a python CLI building library for minimalists.
 <a href="https://app.fossa.com/projects/git%2Bgithub.com%2Frelastle%2Fglacier?ref=badge_shield"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2Frelastle%2Fglacier.svg?type=shield"/></a>
 <a href="https://codecov.io/gh/relastle/glacier"><img src="https://codecov.io/gh/relastle/glacier/branch/master/graph/badge.svg?token=IBCYZODDY3"/></a>
 
-- [glacier](#glacier)
+* [glacier](#glacier)
   * [Installation](#installation)
   * [Quick start](#quick-start)
   * [Basic Usage](#basic-usage)
-    + [CLI without subcommand](#cli-without-subcommand)
-    + [CLI with subcommands](#cli-with-subcommands)
-      - [Pass a list of functions](#pass-a-list-of-functions)
-      - [Pass a dictionary of functions](#pass-a-dictionary-of-functions)
-    + [Positional argument](#positional-argument)
-    + [Options](#options)
-    + [Default value for optional argument](#default-value-for-optional-argument)
-    + [Help with docstring](#help-with-docstring)
-      - [Google Style](#google-style)
-      - [Numpy Style](#numpy-style)
-      - [reStructuredText Style](#restructuredtext-style)
-    + [Supported types](#supported-types)
+     * [CLI without subcommand](#cli-without-subcommand)
+     * [CLI with subcommands](#cli-with-subcommands)
+        * [Pass a list of functions](#pass-a-list-of-functions)
+        * [Pass a dictionary of functions](#pass-a-dictionary-of-functions)
+     * [Async entrypoint support](#async-entrypoint-support)
+     * [Positional argument](#positional-argument)
+     * [Options](#options)
+     * [Default value for optional argument](#default-value-for-optional-argument)
+     * [Help with docstring](#help-with-docstring)
+        * [Google Style](#google-style)
+        * [Numpy Style](#numpy-style)
+        * [reStructuredText Style](#restructuredtext-style)
+     * [Supported types](#supported-types)
   * [Note](#note)
-    + [:apple: Philosophy](#apple-philosophy)
-    + [:construction: Warnings](#construction-warnings)
+     * [Philosophy](#apple-philosophy)
+     * [Warnings](#construction-warnings)
   * [Related works](#related-works)
-  * [LICENSE](#license)
+  * [<a href="./LICENSE">LICENSE</a>](#license)
 
 ## Installation
 
@@ -138,6 +139,41 @@ if __name__ == '__main__':
 This works exactly the same as the previous example.
 
 This interface makes it very easy to build a simple CLI tool from an existing project.
+
+### Async entrypoint support
+
+You sometiems want your async function to be a CLI entrypoint.
+Only you have to do is just passing the async function as if it were `sync` function.
+
+The example below combine two async functions and a sync function into CLI
+with nested subcommand structure.
+
+
+```python
+from glacier import glacier
+
+
+async def main() -> None:
+    return
+
+
+def sub_1() -> None:
+    return
+
+
+async def sub_2() -> None:
+    return
+
+
+if __name__ == '__main__':
+    glacier({
+        'main': main,
+        'sub': [
+            sub_1,
+            sub_2,
+        ],
+    })
+```
 
 ### Positional argument
 
