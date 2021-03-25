@@ -2,10 +2,10 @@ name: pythontests
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   pytest:
@@ -36,11 +36,11 @@ jobs:
         run: poetry run coverage run --omit='./tests/**/*' --source=. -m pytest -vv --durations=10
 
       - name: create coverage xml
-        if: ${{ github.ref == 'refs/heads/master' && matrix.python-version == 3.9 }}
+        if: ${{ github.ref == 'refs/heads/main' && matrix.python-version == 3.9 }}
         run: poetry run coverage xml
 
       - name: Upload coverage to Codecov
-        if: ${{ github.ref == 'refs/heads/master' && matrix.python-version == 3.9 && matrix.ox == 'ubuntu-18.04' }}
+        if: ${{ github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && matrix.ox == 'ubuntu-18.04' }}
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
