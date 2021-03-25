@@ -15,6 +15,7 @@ jobs:
       max-parallel: 5
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
+        poetry_version: 1.1.2
     steps:
       - uses: actions/checkout@master
 
@@ -22,7 +23,7 @@ jobs:
         uses: abatilo/actions-poetry@v1.5.0
         with:
           python_version: ${{ matrix.python-version }}
-          poetry_version: 1.0.3
+          poetry-version: ${{ matrix.poetry-version }}
           working_directory: ./
           args: install
 
@@ -30,7 +31,7 @@ jobs:
         uses: abatilo/actions-poetry@v1.5.0
         with:
           python_version: ${{ matrix.python-version }}
-          poetry_version: 1.0.3
+          poetry-version: ${{ matrix.poetry-version }}
           working_directory: ./
           args: run coverage run --omit='./tests/**/*' --source=. -m pytest -vv --durations=10
 
@@ -39,7 +40,7 @@ jobs:
         uses: abatilo/actions-poetry@v1.5.0
         with:
           python_version:  ${{ matrix.python-version }}
-          poetry_version: 1.0.3
+          poetry-version: ${{ matrix.poetry-version }}
           working_directory: ./
           args: run coverage xml
 
