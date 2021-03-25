@@ -27,15 +27,11 @@ jobs:
         with:
           poetry-version: ${{ matrix.poetry-version }}
       - name: Run pytest
-        with:
-          working_directory: ./
-          args: run coverage run --omit='./tests/**/*' --source=. -m pytest -vv --durations=10
+        run: poetry run coverage run --omit='./tests/**/*' --source=. -m pytest -vv --durations=10
 
       - name: create coverage xml
         if: ${{ github.ref == 'refs/heads/master' && matrix.python-version == 3.9 }}
-        with:
-          working_directory: ./
-          args: run coverage xml
+        run: poetry run coverage xml
 
       - name: Upload coverage to Codecov
         if: ${{ github.ref == 'refs/heads/master' && matrix.python-version == 3.9 }}
