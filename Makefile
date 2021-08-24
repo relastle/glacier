@@ -1,6 +1,6 @@
 .PHONY: lint
 lint:
-	flake8 ./glacier ./tests
+	pflake8 ./glacier ./tests
 	mypy ./glacier ./tests
 	python3 -m unittest discover -v
 
