@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "glacier"
-version = "0.3.1"
+version = "0.3.3"
 description = ""
 authors = ["Hiroki Konishi <relastle@gmail.com>"]
 license = "MIT"
