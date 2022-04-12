@@ -142,7 +142,7 @@ This interface makes it very easy to build a simple CLI tool from an existing pr
 
 ### Async entrypoint support
 
-You sometiems want your async function to be a CLI entrypoint.
+You sometimes want your async function to be a CLI entrypoint.
 Only you have to do is just passing the async function as if it were `sync` function.
 
 The example below combine two async functions and a sync function into CLI
@@ -263,7 +263,7 @@ Following style of doctrings are supported
 - [reStructuredText Style](https://github.com/relastle/glacier#restructuredtext-style)
 
 The functions with docstring below will produce the exact the same help message with fed into `glacier`.
-(You don't neet to specify which docstring style is used 😄)
+(You don't need to specify which docstring style is used 😄)
 
 #### Google Style
 

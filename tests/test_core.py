@@ -31,7 +31,7 @@ def my_function_google(
         env: Environment where to run the CLI.
         verbose: If set, verbose output will be shown.
     """
-    # Check if all arguments have the propery type.
+    # Check if all arguments have the property type.
     assert type(_path) == str
     assert type(name) == str
     assert type(age) == int
@@ -75,7 +75,7 @@ def my_function_numpy_docstring(
     verbose: bool
         If set, verbose output will be shown.
     """
-    # Check if all arguments have the propery type.
+    # Check if all arguments have the property type.
     assert type(_path) == str
     assert type(name) == str
     assert type(age) == int
@@ -111,7 +111,7 @@ def my_function_restructured_text_docstring(
     :param env: Environment where to run the CLI.
     :param verbose: If set, verbose output will be shown.
     """
-    # Check if all arguments have the propery type.
+    # Check if all arguments have the property type.
     assert type(_path) == str
     assert type(name) == str
     assert type(age) == int
