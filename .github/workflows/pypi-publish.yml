@@ -11,20 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-
-      - name: Install
-        uses: abatilo/actions-poetry@v1.5.0
+      - name: Poetry
+        uses: abatilo/actions-poetry@v2
         with:
           python_version: 3.8
-          poetry_version: 1.0.3
+          poetry_version: 1.1.13
           working_directory: ./
-          args: install
-
-      - name: Publish
-        uses: abatilo/actions-poetry@v1.5.0
-        with:
-          poetry_version: 1.0.3
-          args: publish --build -u ${PYPI_USER} -p ${PYPI_PASSWORD}
+      - name: Poetry install
+        run: poetry install
+      - name: Poetry Publish
+        run: poetry publish --build -u ${PYPI_USER} -p ${PYPI_PASSWORD}
         env:
           PYPI_USER: ${{ secrets.PYPI_USER }}
           PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
