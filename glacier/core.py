@@ -5,7 +5,12 @@ from typing import (Any, Callable, Coroutine, Dict, List, Optional, Type,
                     TypeVar, Union)
 
 import click
-import click_completion
+try:
+    import click_completion
+    loads_completion = True
+except Exception:
+    loads_completion = False
+    ...
 from click_help_colors import HelpColorsCommand, HelpColorsGroup
 
 from glacier.docstring import (Doc, GoogleParser, NumpyParser, Parser,
@@ -169,7 +174,7 @@ def _get_click_command(
             elif issubclass(param.annotation, Enum):
                 click_f = click.option(  # type: ignore
                     '--' + param.name.replace('_', '-'),
-                    type=click.Choice(enum_map[param.name].keys()),
+                    type=click.Choice(list(enum_map[param.name].keys())),
                     **common_kwargs,
                 )(click_f)
 
@@ -198,22 +203,23 @@ def rename(
     return wrapped
 
 
-@click.option(
-    '-i',
-    '--case-insensitive/--no-case-insensitive',
-    help="Case insensitive completion",
-)
-@click.argument(
-    'shell',
-    required=False,
-    type=click_completion.DocumentedChoice(click_completion.core.shells),
-)
-def show_completion(shell: str, case_insensitive: bool) -> None:
-    """Show the click-completion-command completion code"""
-    extra_env = {
-        '_CLICK_COMPLETION_COMMAND_CASE_INSENSITIVE_COMPLETE': 'ON'
-    } if case_insensitive else {}
-    click.echo(click_completion.core.get_code(shell, extra_env=extra_env))
+if loads_completion:
+    @click.option(
+        '-i',
+        '--case-insensitive/--no-case-insensitive',
+        help="Case insensitive completion",
+    )
+    @click.argument(
+        'shell',
+        required=False,
+        type=click_completion.DocumentedChoice(click_completion.core.shells),
+    )
+    def show_completion(shell: str, case_insensitive: bool) -> None:
+        """Show the click-completion-command completion code"""
+        extra_env = {
+            '_CLICK_COMPLETION_COMMAND_CASE_INSENSITIVE_COMPLETE': 'ON'
+        } if case_insensitive else {}
+        click.echo(click_completion.core.get_code(shell, extra_env=extra_env))
 
 
 def glacier_group(
@@ -265,7 +271,7 @@ def glacier_group(
     else:
         raise Exception("The arguments of glacier is wrong.")
 
-    if parent_group is None:
+    if parent_group is None and loads_completion:
         group.command(  # type: ignore
             cls=HelpColorsCommand,
             context_settings=CONTEXT_SETTINGS,
@@ -289,5 +295,6 @@ def glacier(f: Union[
         entry_point_f = _get_click_command(f)
     else:
         entry_point_f = glacier_group(f)  # type: ignore
-    click_completion.init()
+    if loads_completion:
+        click_completion.init()
     entry_point_f()
