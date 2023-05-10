@@ -38,7 +38,7 @@ DEFAULT_COLOR_OPTIONS = dict(
 
 
 GlacierFunction = Union[
-    Callable[..., None],
+    Callable[..., Any],
     Callable[..., Coroutine[Any, Any, Any]],
 ]
 
@@ -49,7 +49,7 @@ GlacierUnit = Union[
 ]
 
 
-def get_enum_map(f: Callable[..., None]) -> Dict[str, Dict[str, Any]]:
+def get_enum_map(f: Callable[..., Any]) -> Dict[str, Dict[str, Any]]:
     sig = signature(f)
 
     # pick enum from signature
@@ -64,9 +64,9 @@ def get_enum_map(f: Callable[..., None]) -> Dict[str, Dict[str, Any]]:
 
 
 def glacier_wrap(
-    f: Callable[..., None],
+    f: Callable[..., Any],
     enum_map: Dict[str, Dict[str, Any]],
-) -> Callable[..., None]:
+) -> Callable[..., Any]:
     """
     Return the new function which is click-compatible
     (has no enum signature arguments) from the arbitrary glacier compatible
@@ -75,7 +75,7 @@ def glacier_wrap(
 
     # Implemented the argument convert logic
     @functools.wraps(f)
-    def wrapped(*args: Any, **kwargs: Any) -> None:
+    def wrapped(*args: Any, **kwargs: Any) -> Any:
         # convert args and kwargs
         converted_kwargs = {}
         for name, value in kwargs.items():
