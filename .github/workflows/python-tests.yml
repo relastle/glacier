@@ -11,16 +11,16 @@ jobs:
   pytest:
     name: pytest
     strategy:
-      max-parallel: 5
+      max-parallel: 2
       matrix:
-        python-version: [3.7, 3.8, 3.9]
-        poetry-version: [1.1.13]
-        os: [ubuntu-18.04, macos-latest, windows-latest]
+        python-version: [3.9]
+        poetry-version: [1.4.2]
+        os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -40,7 +40,7 @@ jobs:
         run: poetry run coverage xml
 
       - name: Upload coverage to Codecov
-        if: ${{ github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && matrix.ox == 'ubuntu-18.04' }}
+        if: ${{ github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && matrix.ox == 'ubuntu-latest' }}
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
