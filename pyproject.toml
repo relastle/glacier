@@ -1,24 +1,15 @@
-[project]
-name = "glacier"
-version = "0.4.1"
-authors = [
-  { name="Hiroki Konishi", email="relastle@gmail.com" },
-]
-readme = "README.md"
-requires-python = ">=3.9"
-
-[project.urls]
-"Homepage" = "https://github.com/relastle/glacier"
-
 [tool.poetry]
 name = "glacier"
-version = "0.4.1"
+version = "0.4.2"
 description = ""
 authors = ["Hiroki Konishi <relastle@gmail.com>"]
 license = "MIT"
 packages = [
   {include = "glacier"}
 ]
+homepage = "https://github.com/relastle/glacier"
+repository = "https://github.com/relastle/glacier"
+documentation = "https://github.com/relastle/glacier"
 
 [tool.poetry.dependencies]
 python = "^3.9"
