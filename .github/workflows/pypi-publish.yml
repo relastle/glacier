@@ -24,14 +24,13 @@ jobs:
       - name: Install Dependencies
         run: |
           uv venv
-          uv sync
+          uv pip install -r requirements-dev.txt
           uv pip install build twine
 
       - name: Build and Publish
         run: |
           . .venv/bin/activate
           python -m build
-          twine upload dist/* -u ${PYPI_USER} -p ${PYPI_PASSWORD}
+          twine upload dist/* -u __token__ -p ${PYPI_TOKEN}
         env:
-          PYPI_USER: ${{ secrets.PYPI_USER }}
-          PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
