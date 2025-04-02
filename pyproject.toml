@@ -13,6 +13,9 @@ urls = { Homepage = "https://github.com/relastle/glacier", Documentation = "http
 requires = ["hatchling>=1.0.0"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build]
+include = ["glacier/*.py", "README.md", "LICENSE", "pyproject.toml"]
+
 [tool.mypy]
 ignore_missing_imports = true
 warn_redundant_casts = true
