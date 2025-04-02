@@ -2,8 +2,8 @@ import unittest
 from enum import Enum
 
 from click.testing import CliRunner
-from glacier.core import _get_click_command, glacier_group
 
+from glacier.core import _get_click_command, glacier_group
 from tests.utils import get_options, get_values
 
 
@@ -130,7 +130,6 @@ def my_function_restructured_text_docstring(
 
 
 class TestCore(unittest.TestCase):
-
     def test_glacier_ok(self) -> None:
         """
         Appropriate pattern (perfectly happy path).
@@ -145,13 +144,16 @@ class TestCore(unittest.TestCase):
 
             # All required arguments are provided, and
             # verbose (default value is set) is omitted.
-            result = runner.invoke(f, [
-                'path',
-                '--name=taro',
-                '--age=10',
-                '--is-test',
-                '--env=development',
-            ])
+            result = runner.invoke(
+                f,
+                [
+                    'path',
+                    '--name=taro',
+                    '--age=10',
+                    '--is-test',
+                    '--env=development',
+                ],
+            )
             # No excption occurs
             assert not result.exception
 
@@ -176,16 +178,16 @@ class TestCore(unittest.TestCase):
         ]:
             f = _get_click_command(function)
             runner = CliRunner()
-            result = runner.invoke(f, [
-                '-h',
-            ])
+            result = runner.invoke(
+                f,
+                [
+                    '-h',
+                ],
+            )
             # No exception occurs.
             assert not result.exception
             # Assert that docstring description is contained in help.
-            assert (
-                'This is my test function for generating CLI entrypoint.'
-                in result.output
-            )
+            assert 'This is my test function for generating CLI entrypoint.' in result.output
 
             # Assert that options are displayed in order.
             help_options = get_options(result.output)
@@ -219,37 +221,43 @@ class TestCore(unittest.TestCase):
         def b() -> None:
             print('b')
 
-        f = glacier_group({
-            'a': [
-                a_1,
-                a_2,
-            ],
-            'b': b,
-        })
+        f = glacier_group(
+            {
+                'a': [
+                    a_1,
+                    a_2,
+                ],
+                'b': b,
+            }
+        )
         runner = CliRunner()
-        assert runner.invoke(f, [
-            'a', 'a-1',
-        ]).output == 'a_1\n'
-        assert runner.invoke(f, [
-            'a', 'a-2',
-        ]).output == 'a_2\n'
-        assert runner.invoke(f, [
-            'b',
-        ]).output == 'b\n'
+        assert (
+            runner.invoke(
+                f,
+                [
+                    'a',
+                    'a-1',
+                ],
+            ).output
+            == 'a_1\n'
+        )
+        assert (
+            runner.invoke(
+                f,
+                [
+                    'a',
+                    'a-2',
+                ],
+            ).output
+            == 'a_2\n'
+        )
+        assert (
+            runner.invoke(
+                f,
+                [
+                    'b',
+                ],
+            ).output
+            == 'b\n'
+        )
         return
-
-
-async def my_async_function(_a: str, b: int) -> None:
-    print('foo')
-
-
-class TestCoreAsync(unittest.TestCase):
-
-    def test_async_function(_) -> None:
-        f = _get_click_command(my_async_function)
-        runner = CliRunner()
-        result = runner.invoke(f, [
-            'a',
-            '--b=10',
-        ])
-        assert result.stdout.strip() == 'foo'

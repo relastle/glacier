@@ -12,8 +12,6 @@ def coro(f: Any) -> Any:
 
     @wraps(f)  # type: ignore
     def wrapper(*args: Any, **kwargs: Any) -> Any:
-        return (
-            asyncio.get_event_loop()
-            .run_until_complete(f(*args, **kwargs))
-        )  # type: ignore
+        return asyncio.get_event_loop().run_until_complete(f(*args, **kwargs))  # type: ignore
+
     return wrapper

@@ -46,7 +46,6 @@ class TestArg(unittest.TestCase):
 
 
 class TestDocstringGoogle(unittest.TestCase):
-
     def test_google_one_line_description(self) -> None:
         docstring = """ This is oneline docstring. """
         parser = GoogleParser()
@@ -78,7 +77,6 @@ class TestDocstringGoogle(unittest.TestCase):
 
 
 class TestDocstringNumpy(unittest.TestCase):
-
     def test_numpy_one_line_description(self) -> None:
         docstring = """ This is oneline docstring. """
         parser = NumpyParser()
@@ -113,7 +111,6 @@ class TestDocstringNumpy(unittest.TestCase):
 
 
 class TestDocstringRestructuredText(unittest.TestCase):
-
     def test_resttext_one_line_description(self) -> None:
         docstring = """ This is oneline docstring. """
         parser = NumpyParser()

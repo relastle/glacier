@@ -1,6 +1,7 @@
 """
 Parser of docstring
 """
+
 import re
 from enum import Enum, auto
 from typing import List
@@ -15,7 +16,6 @@ RESTTXT_ARG_START_PATTERN = re.compile(r'^:param (\w+):')
 
 @dataclass(init=False)
 class DescriptionBuilder:
-
     last_is_line_break: bool
     description: str
 
@@ -66,25 +66,31 @@ class Arg:
             m = re.search(GOOGLE_ARG_START_PATTERN, line.lstrip())
             if m:
                 if arg_name:
-                    args.append(Arg(
-                        name=arg_name,
-                        description=arg_description_builder.build(),
-                    ))
+                    args.append(
+                        Arg(
+                            name=arg_name,
+                            description=arg_description_builder.build(),
+                        )
+                    )
                     arg_description_builder = DescriptionBuilder()
                 arg_name = m.group(1)
-                arg_description_builder.add_line(re.sub(
-                    GOOGLE_ARG_START_PATTERN,
-                    '',
-                    line.lstrip(),
-                ).strip())
+                arg_description_builder.add_line(
+                    re.sub(
+                        GOOGLE_ARG_START_PATTERN,
+                        '',
+                        line.lstrip(),
+                    ).strip()
+                )
             else:
                 arg_description_builder.add_line(line.strip())
 
         if arg_name:
-            args.append(Arg(
-                name=arg_name,
-                description=arg_description_builder.build(),
-            ))
+            args.append(
+                Arg(
+                    name=arg_name,
+                    description=arg_description_builder.build(),
+                )
+            )
         return args
 
     @classmethod
@@ -104,20 +110,24 @@ class Arg:
             m = re.search(NUMPY_ARG_START_PATTERN, line.lstrip())
             if m:
                 if arg_name:
-                    args.append(Arg(
-                        name=arg_name,
-                        description=arg_description_builder.build(),
-                    ))
+                    args.append(
+                        Arg(
+                            name=arg_name,
+                            description=arg_description_builder.build(),
+                        )
+                    )
                     arg_description_builder = DescriptionBuilder()
                 arg_name = m.group(1)
             else:
                 arg_description_builder.add_line(line.strip())
 
         if arg_name:
-            args.append(Arg(
-                name=arg_name,
-                description=arg_description_builder.build(),
-            ))
+            args.append(
+                Arg(
+                    name=arg_name,
+                    description=arg_description_builder.build(),
+                )
+            )
         return args
 
     @classmethod
@@ -136,25 +146,31 @@ class Arg:
             m = re.search(RESTTXT_ARG_START_PATTERN, line.lstrip())
             if m:
                 if arg_name:
-                    args.append(Arg(
-                        name=arg_name,
-                        description=arg_description_builder.build(),
-                    ))
+                    args.append(
+                        Arg(
+                            name=arg_name,
+                            description=arg_description_builder.build(),
+                        )
+                    )
                     arg_description_builder = DescriptionBuilder()
                 arg_name = m.group(1)
-                arg_description_builder.add_line(re.sub(
-                    RESTTXT_ARG_START_PATTERN,
-                    '',
-                    line.lstrip(),
-                ).strip())
+                arg_description_builder.add_line(
+                    re.sub(
+                        RESTTXT_ARG_START_PATTERN,
+                        '',
+                        line.lstrip(),
+                    ).strip()
+                )
             else:
                 arg_description_builder.add_line(line.strip())
 
         if arg_name:
-            args.append(Arg(
-                name=arg_name,
-                description=arg_description_builder.build(),
-            ))
+            args.append(
+                Arg(
+                    name=arg_name,
+                    description=arg_description_builder.build(),
+                )
+            )
         return args
 
 
@@ -164,13 +180,11 @@ class Doc:
     args: List[Arg]
 
     def get_matched_arg_count(self, real_args: List[str]) -> int:
-        """ Get the number of given argument names which is also
+        """Get the number of given argument names which is also
         in docstring.
         """
 
-        return sum([
-            (arg.name in real_args) for arg in self.args
-        ])
+        return sum([(arg.name in real_args) for arg in self.args])
 
 
 class Parser(Protocol):
@@ -206,7 +220,6 @@ class NumpyParserState(Enum):
 
 
 class NumpyParser:
-
     def parse(self, docstring: str) -> Doc:
         docstring_lines = docstring.splitlines()
         description_builder = DescriptionBuilder()
@@ -231,7 +244,6 @@ RESTTXT_ITEM_PATTERN = re.compile(r'^:(\w+) (\w+):')
 
 
 class RestructuredTextParser:
-
     def parse(self, docstring: str) -> Doc:
         docstring_lines = docstring.splitlines()
         description_builder = DescriptionBuilder()

@@ -45,10 +45,12 @@ def get_options(help_str: str) -> List[HelpOption]:
                 if m is None:
                     continue
                 option_name = m.group(1)
-                res.append(HelpOption(
-                    name=option_name,
-                    line=line.strip(),
-                ))
+                res.append(
+                    HelpOption(
+                        name=option_name,
+                        line=line.strip(),
+                    )
+                )
             else:
                 options_found = False
     return res

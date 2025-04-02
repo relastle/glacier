@@ -1,20 +1,22 @@
 .PHONY: lint
 lint:
-	pflake8 ./glacier ./tests
+	ruff check ./glacier ./tests
 	mypy ./glacier ./tests
-	python3 -m unittest discover -v
 
 .PHONY: test
 test:
-	coverage run --omit='./tests/**/*' --source=. -m pytest -vvs --durations=10 --diff-type=split
+	coverage run --omit='./tests/**/*' --source=. -m pytest -vvs --durations=10
 	coverage report -m
 
 .PHONY: publish
 publish: lint
-	@poetry build
-	@poetry publish -u ${PYPI_USER} -p ${PYPI_PASSWORD}
+	python -m build
+	twine upload dist/* -u ${PYPI_USER} -p ${PYPI_PASSWORD}
 
 .PHONY: clean
 clean:
 	rm -rf ./**/__pycache__
 	rm -rf ./**/.mypy_cache
+	rm -rf ./dist
+	rm -rf ./build
+	rm -rf ./.venv

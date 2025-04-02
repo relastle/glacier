@@ -14,7 +14,6 @@ jobs:
       max-parallel: 2
       matrix:
         python-version: [3.9]
-        poetry-version: [1.4.2]
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -24,23 +23,29 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Run image
-        uses: abatilo/actions-poetry@v2.1.0
-        with:
-          poetry-version: ${{ matrix.poetry-version }}
+      - name: Install UV
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Install Dependencies
+        run: |
+          uv venv
+          uv pip install -r requirements-dev.txt
 
       - name: Run pytest
-        run: poetry install
+        run: |
+          . .venv/bin/activate
+          coverage run --omit='./tests/**/*' --source=. -m pytest -vv --durations=10
 
-      - name: Run pytest
-        run: poetry run coverage run --omit='./tests/**/*' --source=. -m pytest -vv --durations=10
-
-      - name: create coverage xml
+      - name: Create coverage xml
         if: ${{ github.ref == 'refs/heads/main' && matrix.python-version == 3.9 }}
-        run: poetry run coverage xml
+        run: |
+          . .venv/bin/activate
+          coverage xml
 
       - name: Upload coverage to Codecov
-        if: ${{ github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && matrix.ox == 'ubuntu-latest' }}
+        if: ${{ github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && matrix.os == 'ubuntu-latest' }}
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

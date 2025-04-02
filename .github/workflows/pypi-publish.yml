@@ -5,24 +5,33 @@ on:
     types: [published]
 
 jobs:
-  pytest:
-    name: pytest
+  publish:
+    name: publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
 
-      - name: Poetry
-        uses: abatilo/actions-poetry@v2
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          python_version: 3.9
-          poetry_version: 1.4.2
-          working-directory: ./
+          python-version: 3.9
 
-      - name: Poetry install
-        run: poetry install
+      - name: Install UV
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
-      - name: Poetry Publish
-        run: poetry publish --build -u ${PYPI_USER} -p ${PYPI_PASSWORD}
+      - name: Install Dependencies
+        run: |
+          uv venv
+          uv pip install -r requirements-dev.txt
+          uv pip install build twine
+
+      - name: Build and Publish
+        run: |
+          . .venv/bin/activate
+          python -m build
+          twine upload dist/* -u ${PYPI_USER} -p ${PYPI_PASSWORD}
         env:
           PYPI_USER: ${{ secrets.PYPI_USER }}
           PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}

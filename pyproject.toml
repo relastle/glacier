@@ -1,39 +1,17 @@
-[tool.poetry]
+[project]
 name = "glacier"
-version = "0.4.2"
-description = ""
-authors = ["Hiroki Konishi <relastle@gmail.com>"]
-license = "MIT"
-packages = [
-  {include = "glacier"}
-]
-homepage = "https://github.com/relastle/glacier"
-repository = "https://github.com/relastle/glacier"
-documentation = "https://github.com/relastle/glacier"
-
-[tool.poetry.dependencies]
-python = "^3.9"
-typing-extensions = "^4.1.1"
-click = "^8.0.4"
-click-help-colors = "^0.9.1"
-importlib-metadata = "^4.11.3"
-
-[tool.poetry.dev-dependencies]
-pytest = "==6.0.1"
-flake8 = "==3.8.3"
-autopep8 = "==1.5.4"
-pyflakes = "==2.2.0"
-coverage = "==5.2.1"
-pyproject-flake8 = "^0.0.1-alpha.2"
-mypy = "^0.910"
+version = "0.4.3"
+description = "Python CLI building library for minimalists"
+authors = [{ name = "Hiroki Konishi", email = "relastle@gmail.com" }]
+license = { text = "MIT" }
+requires-python = ">=3.9"
+readme = "README.md"
+dependencies = ["click>=8.1.8", "click-help-colors>=0.9.4"]
+urls = { Homepage = "https://github.com/relastle/glacier", Documentation = "https://github.com/relastle/glacier", Repository = "https://github.com/relastle/glacier" }
 
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
-
-[tool.flake8]
-max-line-length = 88
-ignore = "E402 F541 W504"
+requires = ["hatchling>=1.0.0"]
+build-backend = "hatchling.build"
 
 [tool.mypy]
 ignore_missing_imports = true
@@ -46,3 +24,19 @@ disallow_untyped_calls = true
 disallow_untyped_defs = true
 warn_return_any = true
 warn_unused_ignores = false
+
+[tool.ruff]
+lint.ignore = ['E721']
+line-length = 120
+
+[tool.ruff.format]
+quote-style = "single"
+
+[dependency-groups]
+dev = [
+  "coverage>=7.8.0",
+  "mypy>=1.15.0",
+  "pytest>=8.3.5",
+  "pytest-asyncio>=0.26.0",
+  "ruff>=0.11.2",
+]
