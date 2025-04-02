@@ -24,7 +24,7 @@ jobs:
       - name: Install Dependencies
         run: |
           uv venv
-          uv pip install -r requirements-dev.txt
+          uv sync --no-dev
           uv pip install build twine
 
       - name: Build and Publish

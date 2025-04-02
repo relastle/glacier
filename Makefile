@@ -11,7 +11,7 @@ test:
 .PHONY: publish
 publish: lint
 	python -m build
-	twine upload dist/* -u ${PYPI_USER} -p ${PYPI_PASSWORD}
+	twine upload dist/* -u __token__ -p ${PYPI_TOKEN}
 
 .PHONY: clean
 clean:
