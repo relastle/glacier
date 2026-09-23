@@ -7,7 +7,7 @@ from enum import Enum, auto
 from typing import List
 from dataclasses import dataclass
 
-from typing_extensions import Protocol
+from typing import Protocol
 
 GOOGLE_ARG_START_PATTERN = re.compile(r'^(\w+): ')
 NUMPY_ARG_START_PATTERN = re.compile(r'^(\w+):')
