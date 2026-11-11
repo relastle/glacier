@@ -261,3 +261,21 @@ class TestCore(unittest.TestCase):
             == 'b\n'
         )
         return
+
+    def test_glacier_string_annotations(self) -> None:
+        """
+        Check functions with string annotations (PEP 563) do not crash.
+        """
+
+        def string_annotated(name: 'str', env: 'Env' = Env.DEV) -> None:
+            print(f'name={name}')
+            print(f'env={env}')
+            return
+
+        command = _get_click_command(string_annotated)
+        runner = CliRunner()
+        result = runner.invoke(command, ['--name', 'foo', '--env', 'production'])
+        assert result.exit_code == 0
+        assert 'name=foo' in result.output
+        assert 'env=Env.PROD' in result.output
+        return
