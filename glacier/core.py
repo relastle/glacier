@@ -1,7 +1,7 @@
 import functools
 from enum import Enum
-from inspect import Parameter, signature
-from typing import Any, Callable, Coroutine, Dict, List, Optional, Type, TypeVar, Union
+from inspect import Parameter, signature, unwrap
+from typing import Any, Callable, Coroutine, Dict, List, Optional, Type, TypeVar, Union, get_type_hints
 
 import click
 
@@ -49,14 +49,24 @@ GlacierUnit = Union[
 ]
 
 
+def _get_type_hints(f: Callable[..., Any]) -> Dict[str, Any]:
+    """Resolve annotations, tolerating string ones (PEP 563) and unresolvable names."""
+    try:
+        return get_type_hints(unwrap(f))
+    except Exception:
+        return {}
+
+
 def get_enum_map(f: Callable[..., Any]) -> Dict[str, Dict[str, Any]]:
     sig = signature(f)
+    type_hints = _get_type_hints(f)
 
     # pick enum from signature
     enum_map: Dict[str, Dict[str, Any]] = {}
     for param in sig.parameters.values():
-        if issubclass(param.annotation, Enum):
-            enum_class = param.annotation
+        annotation = type_hints.get(param.name, param.annotation)
+        if isinstance(annotation, type) and issubclass(annotation, Enum):
+            enum_class = annotation
             enum_map.setdefault(param.name, {})
             for enum_entry in enum_class:
                 enum_map[param.name][enum_entry.value] = enum_entry
@@ -110,6 +120,7 @@ def _get_click_command(
 
     # Get signature
     sig = signature(f)
+    type_hints = _get_type_hints(f)
 
     # Get docstring
     docstring = f.__doc__
@@ -131,11 +142,12 @@ def _get_click_command(
 
     # Decorate the function reversely.
     for param in reversed(list(sig.parameters.values())):
+        annotation = type_hints.get(param.name, param.annotation)
         if param.name.startswith('_'):
             # Positional argument
             click_f = click.argument(
                 param.name,
-                type=param.annotation,
+                type=annotation,
                 nargs=1,
             )(click_f)
         else:
@@ -150,7 +162,7 @@ def _get_click_command(
                     default=param.default,
                     help=arg_help_d.get(param.name, ''),
                 )
-            if param.annotation == bool:
+            if annotation == bool:
                 # Boolean flag
                 click_f = click.option(
                     '--' + param.name.replace('_', '-'),
@@ -158,14 +170,14 @@ def _get_click_command(
                     type=bool,
                     **common_kwargs,  # type: ignore
                 )(click_f)
-            elif param.annotation == str or param.annotation == int:
+            elif annotation == str or annotation == int:
                 # string or boolean option
                 click_f = click.option(  # type: ignore
                     '--' + param.name.replace('_', '-'),
-                    type=param.annotation,
+                    type=annotation,
                     **common_kwargs,  # type: ignore
                 )(click_f)
-            elif issubclass(param.annotation, Enum):
+            elif isinstance(annotation, type) and issubclass(annotation, Enum):
                 click_f = click.option(  # type: ignore
                     '--' + param.name.replace('_', '-'),
                     type=click.Choice(list(enum_map[param.name].keys())),
